@@ -1,0 +1,18 @@
+[subject:Відповідь на ваш коментар - {site}]
+
+Вітаємо, {nickname}.
+
+На сторінці "<a href="{page_url}">{page_title}</a>" додана відповідь на ваш коментар.
+
+Ви написали:
+<blockquote>{original}</blockquote>
+
+<a href="{author_url}">{author_nickname}</a> відповідає:
+<blockquote>{comment}</blockquote>
+
+Ви можете відповісти на цей коментар перейшовши за посиланням:
+<a href="{page_url}">{page_url}</a>
+
+--
+ З повагою, {site}
+ <small>Лист відправлено автоматично, будь ласка, не відповідайте на нього.</small>

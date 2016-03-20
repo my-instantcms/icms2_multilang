@@ -1,0 +1,15 @@
+[subject:Новий запис на стіні - {site}]
+
+Вітаємо, {nickname}.
+
+На сторінці вашого <a href="{profile_url}">профілю</a> додано новий запис на стіні.
+
+<a href="{author_url}">{author_nickname}</a> пише:
+<blockquote>{content}</blockquote>
+
+Ви можете відповісти на цей запис перейшовши за посиланням:
+<a href="{profile_url}">{profile_url}</a>
+
+--
+ З повагою, {site}
+ <small>Лист відправлено автоматично, будь ласка, не відповідайте на нього.</small>

@@ -1,0 +1,10 @@
+[subject:{user_nickname} запрошує до групи - {site}]
+
+Вітаємо.
+
+<a href="{user_url}">{user_nickname}</a> запрошує Вас вступити в групу <a href="{group_url}">{group_title}</a>.
+
+
+--
+ З повагою, {site}
+ <small>Лист відправлено автоматично, будь ласка, не відповідайте на нього.</small>
