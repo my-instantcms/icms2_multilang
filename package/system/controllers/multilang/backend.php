@@ -2,6 +2,8 @@
 
 class backendMultilang extends cmsBackend {
 	
+	public $useDefaultOptionsAction = true;
+	
 	public function actionIndex(){		
 		$this->redirectToAction('contents');		
 	}
@@ -20,6 +22,10 @@ class backendMultilang extends cmsBackend {
 				'title' => LANG_CP_SECTION_WIDGETS,
 				'url' => href_to($this->root_url, 'widgets')
 			),
+			array(
+                'title' => LANG_OPTIONS,
+                'url' => href_to($this->root_url, 'options')
+            ),
 		);		
 	}
 	

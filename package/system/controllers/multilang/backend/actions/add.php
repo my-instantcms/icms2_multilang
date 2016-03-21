@@ -5,6 +5,7 @@ class actionMultilangAdd extends cmsAction {
     public function run($type=false, $parent=false, $id=false){
         if (!$parent || !$id || !$type) { cmsCore::error404(); }	
         $model = cmsCore::getModel('multilang');
+        $options = cmsController::getOptions();
 		$lang = $this->getLang();
 		$original = $model->getOriginalItem($type, $parent, $id);
 		if(!$original){cmsCore::error404();}
@@ -32,6 +33,7 @@ class actionMultilangAdd extends cmsAction {
             'form' => $form,
             'translate' => isset($translate) ? $translate : false,
             'original' => isset($original) ? $original : false,
+            'options' => isset($options) ? $options : false,
             'errors' => isset($errors) ? $errors : false,
 			'lang' => $lang
         ));
