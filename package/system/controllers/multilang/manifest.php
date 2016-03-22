@@ -3,4 +3,5 @@
 		'content_before_item',
 		'menu_translate',
 		'widgets_translate',
+		'engine_start',
 	));
