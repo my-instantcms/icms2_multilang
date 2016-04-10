@@ -38,6 +38,14 @@ function grid_content_items($controller, $ctype_name=false){
     );
 
     $actions = array(
+		array(
+            'title' => LANG_MULTILANG_ADD_TRANSLATE,
+            'class' => 'play',
+            'href' => href_to($controller->root_url, 'add/contents', array('{parent}', '{id}')),
+			'handler' => function ($row){
+				return $row['translated'] ? false : true;
+			}
+        ),
         array(
             'title' => LANG_EDIT,
             'class' => 'edit',

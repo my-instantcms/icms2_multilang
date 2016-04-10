@@ -2,6 +2,8 @@
 
 class multilang extends cmsFrontend {
 	
+	protected $useOptions = true;
+	
 	public function actionSetlang($lang = false){
 		if(!$lang){cmsCore::error404();}
 		$langs = cmsCore::getLanguages();
@@ -21,5 +23,43 @@ class multilang extends cmsFrontend {
 		$result = cmsUser::sessionSet('user:language', $lang);
 		$this->cms_template->renderJSON(array('error'=>$result));
 	}
+	
+	public function actionTranslation($id, $to_lang, $ctype){
+		if(!$this->request->isAjax()){cmsCore::error404();}
+		$item = $this->model->selectOnly('i.id, i.content')->getItemById('con_'.$ctype, $id);
+		if($item){
+			$data = array(
+				'key' => $this->options['key'],
+				'text' => $item['content'],
+				'lang' => $to_lang,
+				'format' => 'html',
+				'options' => 1
+			);
+
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://translate.yandex.net/api/v1.5/tr.json/translate');
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+			curl_setopt($curl, CURLOPT_POST, 1);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.71 Safari/534.24");
+			$response = curl_exec($curl);
+			if(curl_errno($curl)){
+				$this->cms_template->renderJSON(array('error'=>true, 'translate' => curl_error($curl)));
+			} else { 
+				curl_close($curl);
+				$text = json_decode($response, true);
+				if($text['code'] == 200){
+					$this->cms_template->renderJSON(array('error'=>false, 'translate' => $text['text'][0]));
+				} else {
+					$this->cms_template->renderJSON(array('error'=>true, 'translate' => $text['message']));
+				}
+			}
+		}
+		
+		$this->cms_template->renderJSON(array('error'=>true, 'translate' => LANG_MULTILANG_NO_ITEM));
+
+    }
 	
 }

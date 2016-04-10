@@ -13,7 +13,7 @@ class actionMultilangMenuAjax extends cmsAction {
 
         $total = $items ? 1 : 0;
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $items, $total);
+        $this->cms_template->renderGridRowsJSON($grid, $items, $total);
 
         $this->halt();
 

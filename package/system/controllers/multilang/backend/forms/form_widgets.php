@@ -14,6 +14,10 @@ class formMultilangWidgets extends cmsForm {
                             array('min_length', 3)
                         )
                     )),
+					new fieldText('links',array(
+						'title' => LANG_WIDGET_TITLE_LINKS,
+						'hint' => LANG_WIDGET_TITLE_LINKS_HINT,
+					))
                 )
             )
         );

@@ -4,7 +4,6 @@ class actionMultilangMenu extends cmsAction {
 
     public function run($do=false){
 
-        // если нужно, передаем управление другому экшену
         if ($do){
             $this->runAction('menu_'.$do, array_slice($this->params, 1));
             return;
@@ -16,7 +15,7 @@ class actionMultilangMenu extends cmsAction {
 
         $grid = $this->loadDataGrid('menu_items');
 
-        return cmsTemplate::getInstance()->render('backend/menu', array(
+        return $this->cms_template->render('backend/menu', array(
             'menus' => $menus,
             'grid' => $grid
         ));

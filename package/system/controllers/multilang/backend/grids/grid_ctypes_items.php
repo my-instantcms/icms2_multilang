@@ -1,16 +1,17 @@
 <?php
 
-function grid_widget_items($controller){
+function grid_ctypes_items($controller){
 
     $options = array(
-         'is_auto_init' => false, 
+        'is_auto_init' => true,
         'is_sortable' => false,
         'is_filter' => false,
-        'is_pagination' => false,
+        'is_pagination' => true,
         'is_draggable' => false,
-        'order_by' => 'ordering',
-        'order_to' => 'asc',
-        'show_id' => false
+        'is_selectable' => false,
+        'order_by' => 'id',
+        'order_to' => 'desc',
+        'show_id' => true
     );
 
     $columns = array(
@@ -21,15 +22,12 @@ function grid_widget_items($controller){
         ),
         'title' => array(
             'title' => LANG_TITLE,
-            'href' => href_to($controller->root_url, 'edit/widgets', array('{parent}', '{id}')),
+            'href' => href_to($controller->root_url, 'edit/ctypes', array('0', '{id}')),
             'filter' => 'like',
 			'handler' => function($title, $row)  use ($controller){
-				$url = href_to($controller->root_url, 'add/widgets', array($row['parent'], $row['id']));
+				$url = href_to($controller->root_url, 'add/ctypes', array('0', $row['id']));
 				return $row['translated'] ? $title : '<a href="'.$url.'">'.$title.'</a>';
 			}
-        ),
-		'template' => array(
-            'title' => LANG_WIDGET_BODY_TPL,
         ),
         'translated' => array(
             'title' => LANG_MULTILANG_TRANSLATE,
@@ -43,7 +41,7 @@ function grid_widget_items($controller){
 		array(
             'title' => LANG_MULTILANG_ADD_TRANSLATE,
             'class' => 'play',
-            'href' => href_to($controller->root_url, 'add/widgets', array('{parent}', '{id}')),
+            'href' => href_to($controller->root_url, 'add/ctypes', array('0', '{id}')),
 			'handler' => function ($row){
 				return $row['translated'] ? false : true;
 			}
@@ -51,7 +49,7 @@ function grid_widget_items($controller){
         array(
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href' => href_to($controller->root_url, 'edit/widgets', array('{parent}', '{id}')),
+            'href' => href_to($controller->root_url, 'edit/ctypes', array('0', '{id}')),
 			'handler' => function ($row){
 				return $row['translated'] ? true : false;
 			}
@@ -59,7 +57,7 @@ function grid_widget_items($controller){
         array(
             'title' => LANG_DELETE,
             'class' => 'delete',
-            'href' => href_to($controller->root_url, 'delete/widgets', array('{parent}', '{id}')),
+            'href' => href_to($controller->root_url, 'delete/ctypes', array('0', '{id}')),
 			'handler' => function ($row){
 				return $row['translated'] ? true : false;
 			},

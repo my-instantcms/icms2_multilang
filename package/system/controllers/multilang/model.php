@@ -4,10 +4,6 @@ class modelMultilang extends cmsModel {
 	
 	public $table_prefix = 'con_';
 	
-	public function getContentType($id, $by_field='id'){
-        return $this->getItemByField('content_types', $by_field, $id);
-    }
-	
 	public function getContentItems($ctype, $lang){
         $table_name = $this->table_prefix . $ctype;
         $this->selectOnly('i.id, i.title, t.item_id as translated');
@@ -30,12 +26,18 @@ class modelMultilang extends cmsModel {
     }
 	
 	public function getWidgetItems($id, $lang){
-		$this->selectOnly('i.id, i.title, t.item_id as translated');
+		$this->selectOnly('i.id, i.title, i.template, t.item_id as translated');
         $this->joinLeft('multilang_widgets', 't', 't.item_id = i.id and t.parent = '.$id.' and t.lang = "'.$lang.'"');
         return $this->filterEqual('widget_id', $id)->get('widgets_bind', function($item, $model) use ($id){
             $item['parent'] = $id;
             return $item;
         });
+    }
+	
+	public function getCtypes($lang){
+		$this->selectOnly('i.id, i.title, t.item_id as translated');
+        $this->joinLeft('multilang_ctypes', 't', 't.item_id = i.id and t.lang = "'.$lang.'"');
+        return $this->get('content_types');
     }
 	
 	public function getOriginalItem($table_name, $parent, $id){
@@ -49,12 +51,16 @@ class modelMultilang extends cmsModel {
 			case 'widgets':
 				$table_name = 'widgets_bind';
 				break;
+			case 'ctypes':
+				$table_name = 'content_types';
+				break;
 		}
         return $this->getItemById($table_name, $id);
     }
 	
-	public function getReadyItem($table, $parent, $item_id){        
-        return $this->filterEqual('item_id', $item_id)->filterEqual('parent', $parent)->getItem($table);
+	public function getReadyItem($table, $parent, $item_id){
+		if($parent){$this->filterEqual('parent', $parent);}
+        return $this->filterEqual('item_id', $item_id)->getItem($table);
     }
 	
 	public function addTranslate($data, $table){
@@ -63,6 +69,21 @@ class modelMultilang extends cmsModel {
 	
 	public function updTranslate($data, $id, $table){
 		 return $this->update($table, $id, $data);
+	}
+	
+	public function deleteController($id) {
+		
+		$widget = $this->getItemByField('widgets', 'controller', 'multilang');
+		if($widget){
+			$this->delete('widgets_bind', $widget['id'], 'widget_id');
+			$this->delete('widgets', $widget['id']);
+		}
+		$this->db->dropTable('multilang_contents');
+		$this->db->dropTable('multilang_ctypes');
+		$this->db->dropTable('multilang_menu');
+		$this->db->dropTable('multilang_widgets');
+		return parent::deleteController($id);
+	 
 	}
     
 }

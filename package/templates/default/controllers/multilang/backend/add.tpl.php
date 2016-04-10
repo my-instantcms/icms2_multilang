@@ -7,10 +7,14 @@
 		'title' => LANG_SAVE,
 		'href'  => "javascript:icms.forms.submit()"
 	));
+	if($type == 'ctypes'){
+		$original['labels'] = cmsModel::yamlToArray($original['labels']);
+	}
 	$this->renderForm($form, $original, array(
 		'action' => '',
 		'method' => 'post'
 	), $errors);
+	$is_page = isset($this->controller->current_params[3]) ? $this->controller->current_params[3] : false;
 	$btn = '<img src="/templates/default/controllers/multilang/flags/'.$lang.'.png"> '.LANG_MULTILANG_AUTO_TRANSLATE;
 ?>
 <script type="text/javascript">
@@ -27,8 +31,23 @@
 				$.post('https://translate.yandex.net/api/v1.5/tr.json/translate'+param, false)
 				.done(function(result){
 					text.val(result.text[0]);
-					$('.cp_toolbar ul li a#ya').html('<?php echo $btn; ?>');
+					<?php if(!isset($original['content'])){ ?>$('.cp_toolbar ul a#ya').html('<?php echo $btn; ?>');<?php } ?>
 				}).fail(function(xhr){alert(xhr.responseJSON.message);});
+				<?php if(isset($original['content']) && $original['content']){ ?>
+					<?php 
+						$item_id = ($do == 'add') ? $original['id'] : $original['item_id'];
+						$param = $item_id.'/'.$lang.'/'.$is_page; 
+					?>
+					$.post('/multilang/translation/<?php echo $param; ?>', false, function(result){
+						if(result.error){
+							alert(result.translate);
+						} else {
+							$('#f_content .redactor-editor').html(result.translate);
+							$('#f_content textarea#content').val(result.translate);
+							$('.cp_toolbar ul li a#ya').html('<?php echo $btn; ?>');
+						}			
+					}, 'json');
+				<?php } ?>
 			} else {alert('<?php html(LANG_MULTILANG_ERROR_API_KEY); ?>');}
 		<?php } else { ?>
 			alert('<?php html(LANG_MULTILANG_ERROR_API_KEY); ?>');

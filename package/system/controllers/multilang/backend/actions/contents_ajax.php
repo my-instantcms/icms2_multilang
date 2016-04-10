@@ -6,7 +6,7 @@ class actionMultilangContentsAjax extends cmsAction {
         if(!$this->request->isAjax()){cmsCore::error404();}
 		$lang = $this->getLang();
         $model = cmsCore::getModel('multilang');
-        $ctype = $model->getContentType($ctype_id);
+        $ctype = $model->getItemByField('content_types', 'id', $ctype_id);
         if(!$ctype){$this->halt();}
         $category = $model->getCategory($ctype['name'], $parent_id);
         if(!$category){$this->halt();}
@@ -24,7 +24,7 @@ class actionMultilangContentsAjax extends cmsAction {
         $pages = ceil($total / $perpage);
         $model->setPerPage($perpage);
         $items = $model->getContentItems($ctype['name'], $lang);
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $items, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $items, $total, $pages);
         $this->halt();
 
     }

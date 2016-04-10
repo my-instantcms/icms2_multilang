@@ -11,7 +11,7 @@ class onMultilangWidgetsTranslate extends cmsAction {
 			$user_lang = $_SESSION['user']['language'];
 		}
 		if($user_lang !== $this->cms_config->cfg_language){
-			$this->model->selectOnly('i.id, i.item_id, i.title');
+			$this->model->selectOnly('i.id, i.item_id, i.title, i.links');
 			$this->model->filterEqual('lang', $user_lang);
 			$is_translate = $this->model->get('multilang_widgets', function($item, $model){
 				$item['id'] = $item['item_id'];

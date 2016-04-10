@@ -3,12 +3,12 @@
 class actionMultilangWidgetsAjax extends cmsAction {
 
     public function run($id=false){
-        if (!$id || !$this->request->isAjax()) { cmsCore::error404(); }		
+        if(!$id || !$this->request->isAjax()){cmsCore::error404();}		
 		$model = cmsCore::getModel('multilang');		
         $grid = $this->loadDataGrid('widget_items');
 		$lang = $this->getLang();
 		$widgets = $model->getWidgetItems($id, $lang);
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $widgets);
+        $this->cms_template->renderGridRowsJSON($grid, $widgets);
         $this->halt();
     }
 

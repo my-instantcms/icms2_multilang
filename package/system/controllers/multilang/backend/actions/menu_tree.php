@@ -28,7 +28,7 @@ class actionMultilangMenuTree extends cmsAction {
             }
         }
 
-        cmsTemplate::getInstance()->renderJSON($tree_nodes);
+        $this->cms_template->renderJSON($tree_nodes);
 
     }
 

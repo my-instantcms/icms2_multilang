@@ -37,6 +37,14 @@ function grid_menu_items($controller){
     );
 
     $actions = array(
+		array(
+            'title' => LANG_MULTILANG_ADD_TRANSLATE,
+            'class' => 'play',
+            'href' => href_to($controller->root_url, 'add/menu', array('{parent}', '{id}')),
+			'handler' => function ($row){
+				return $row['translated'] ? false : true;
+			}
+        ),
         array(
             'title' => LANG_EDIT,
             'class' => 'edit',

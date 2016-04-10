@@ -6,7 +6,7 @@ class actionMultilangWidgets extends cmsAction {
         $model = cmsCore::getModel('multilang');
         $widgets = $model->selectOnly('i.id, i.title')->get('widgets');
         $grid = $this->loadDataGrid('widget_items');
-        return cmsTemplate::getInstance()->render('backend/widgets', array('widgets' => $widgets, 'grid' => $grid));
+        return $this->cms_template->render('backend/widgets', array('widgets' => $widgets, 'grid' => $grid));
     }
 
 }

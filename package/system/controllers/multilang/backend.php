@@ -15,6 +15,10 @@ class backendMultilang extends cmsBackend {
 				'url' => href_to($this->root_url, 'contents')
 			),
 			array(
+				'title' => LANG_CP_SECTION_CTYPES,
+				'url' => href_to($this->root_url, 'ctypes')
+			),
+			array(
 				'title' => LANG_CP_SECTION_MENU,
 				'url' => href_to($this->root_url, 'menu')
 			),
