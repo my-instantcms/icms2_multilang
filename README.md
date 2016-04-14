@@ -36,13 +36,13 @@
 
 ###### Открыть файл \system\controllers\menu\model.php в строку 128 добавить
 ```php
-$menus = cmsEventsManager::hook('menu_translate', $menus);
+$menus = cmsEventsManager::hook('menu_before_list', $menus);
 ```
 
 Должно получиться так
 ```php
 if($menus){
-	$menus = cmsEventsManager::hook('menu_translate', $menus);
+	$menus = cmsEventsManager::hook('menu_before_list', $menus);
         foreach ($menus as $menu) {
             $result[$menu['menu_name']][$menu['id']] = $menu;
         }
@@ -93,7 +93,7 @@ public function getWidgetsForPages($pages_list, $template){
                       $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
                       return $item;
                   });
-	$widgets = cmsEventsManager::hook('widgets_translate', $widgets);
+	$widgets = cmsEventsManager::hook('widgets_before_list', $widgets);
 	return $widgets;
   }
 ```
