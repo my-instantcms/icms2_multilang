@@ -24,6 +24,18 @@ class multilang extends cmsFrontend {
 		$this->cms_template->renderJSON(array('error'=>$result));
 	}
 	
+	public function getUrlLang(){
+		$segments = explode('/', mb_substr($_SERVER['REDIRECT_URL'], mb_strlen($this->cms_config->root)));
+		if (!empty($segments[0])) {
+			$may_be_lang = $segments[0];
+			$langs = cmsCore::getLanguages();
+			if(in_array($may_be_lang, $langs)){
+				return $may_be_lang;
+			}
+		}
+		return false;
+	}
+	
 	public function actionTranslation($id, $to_lang, $ctype){
 		if(!$this->request->isAjax()){cmsCore::error404();}
 		$item = $this->model->selectOnly('i.id, i.content')->getItemById('con_'.$ctype, $id);

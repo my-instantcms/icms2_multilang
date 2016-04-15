@@ -4,7 +4,8 @@ class onMultilangContentBeforeItem extends cmsAction {
 
     public function run($data){	
 		list($c, $i, $f) = $data;
-		$user_lang = $this->cms_core->request->has('lang') ? $this->cms_core->request->get('lang', '') : 'ru';
+		$url_lang = $this->getUrlLang();
+		$user_lang = $url_lang ? $url_lang : 'ru';
 		if(isset($_SESSION['language'])){
 			$user_lang = $_SESSION['language'];
 		}
@@ -30,7 +31,7 @@ class onMultilangContentBeforeItem extends cmsAction {
 			
 			$langs = cmsCore::getLanguages();
 			foreach($langs as $l){
-				$link = $this->cms_config->host.$_SERVER['REQUEST_URI'].'?lang='.$l;
+				$link = $this->cms_config->host. '/' . $l . $_SERVER['REQUEST_URI'];
 				$this->cms_template->addHead('<link rel="alternate" href="'.$link.'" hreflang="'.$l.'" />');
 			}
 		}
