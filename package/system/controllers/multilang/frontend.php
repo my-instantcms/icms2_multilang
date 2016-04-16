@@ -10,6 +10,11 @@ class multilang extends cmsFrontend {
 		$is_lang = in_array($lang, $langs);
 		if(!$is_lang){cmsCore::error404();}
 		$result = cmsUser::sessionSet('user:language', $lang);
+		$segments = explode('/', mb_substr($_SERVER['HTTP_REFERER'], mb_strlen($this->cms_config->host.'/')));
+		if (isset($segments[0]) && strlen($segments[0]) == 2) {
+			unset($segments[0]);
+			$_SERVER['HTTP_REFERER'] = $this->cms_config->host.'/'.implode('/', $segments);
+		}
 		$this->redirectBack();
 	}
 	

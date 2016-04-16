@@ -3,6 +3,7 @@
 class backendMultilang extends cmsBackend {
 	
 	public $useDefaultOptionsAction = true;
+	protected $useOptions = true;
 	
 	public function actionIndex(){		
 		$this->redirectToAction('contents');		
