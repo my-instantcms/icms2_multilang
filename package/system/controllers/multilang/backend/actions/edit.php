@@ -11,7 +11,9 @@ class actionMultilangEdit extends cmsAction {
         $form = $this->getForm($type);
 		if($type == 'contents'){
 			$is_teaser = $model->db->isFieldExists('con_' . $parent, 'teaser');
+			if($is_teaser){
 				$form->addField(0, new fieldText('teaser', array(
+					'title' => LANG_MULTILANG_FIELD_TEASER,
 				)));
 			}
 		}
