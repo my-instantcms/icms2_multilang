@@ -48,6 +48,20 @@
 						}			
 					}, 'json');
 				<?php } ?>
+				<?php if(isset($original['teaser']) && $original['teaser']){ ?>
+					<?php 
+						$item_id = ($do == 'add') ? $original['id'] : $original['item_id'];
+						$param = $item_id.'/'.$lang.'/'.$is_page.'/teaser'; 
+					?>
+					$.post('/multilang/translation/<?php echo $param; ?>', false, function(result){
+						if(result.error){
+							alert(result.translate);
+						} else {
+							$('#f_teaser textarea#teaser').val(result.translate);
+							$('.cp_toolbar ul li a#ya').html('<?php echo $btn; ?>');
+						}			
+					}, 'json');
+				<?php } ?>
 			} else {alert('<?php html(LANG_MULTILANG_ERROR_API_KEY); ?>');}
 		<?php } else { ?>
 			alert('<?php html(LANG_MULTILANG_ERROR_API_KEY); ?>');

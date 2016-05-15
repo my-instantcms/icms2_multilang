@@ -12,7 +12,7 @@ class multilang extends cmsFrontend {
 		$result = cmsUser::sessionSet('user:language', $lang);
 		$segments = explode('/', mb_substr($_SERVER['HTTP_REFERER'], mb_strlen($this->cms_config->host.'/')));
 		if (isset($segments[0]) && strlen($segments[0]) == 2) {
-			unset($segments[0]);
+			if(in_array($segments[0], $langs)){unset($segments[0]);}
 			$_SERVER['HTTP_REFERER'] = $this->cms_config->host.'/'.implode('/', $segments);
 		}
 		$this->redirectBack();
@@ -41,13 +41,14 @@ class multilang extends cmsFrontend {
 		return false;
 	}
 	
-	public function actionTranslation($id, $to_lang, $ctype){
+	public function actionTranslation($id, $to_lang, $ctype, $field = false){
 		if(!$this->request->isAjax()){cmsCore::error404();}
-		$item = $this->model->selectOnly('i.id, i.content')->getItemById('con_'.$ctype, $id);
+		$field = $field ? $field : 'content';
+		$item = $this->model->selectOnly('i.id, i.' . $field)->getItemById('con_'.$ctype, $id);
 		if($item){
 			$data = array(
 				'key' => $this->options['key'],
-				'text' => $item['content'],
+				'text' => $item[$field],
 				'lang' => $to_lang,
 				'format' => 'html',
 				'options' => 1

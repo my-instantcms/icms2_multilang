@@ -9,6 +9,12 @@ class actionMultilangEdit extends cmsAction {
 		$translate = $model->filterEqual('lang', $lang)->getReadyItem('multilang_'.$type, $parent, $id);
 		if(!$translate){cmsCore::error404();}
         $form = $this->getForm($type);
+		if($type == 'contents'){
+			$is_teaser = $model->db->isFieldExists('con_' . $parent, 'teaser');
+				$form->addField(0, new fieldText('teaser', array(
+				)));
+			}
+		}
         $is_submitted = $this->request->has('submit');
         if($is_submitted){
 			$id = $translate['id'];

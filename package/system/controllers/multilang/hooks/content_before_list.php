@@ -16,7 +16,10 @@ class onMultilangContentBeforeList extends cmsAction {
 		}
 		
 		if($user_lang !== $this->cms_config->cfg_language){
-			$this->model->selectOnly('i.id, i.title, i.item_id');
+			$is_teaser = $this->model->db->isFieldExists('con_' . $c['name'], 'teaser');
+			$field = $is_teaser ? ', i.teaser' : '';
+			if($c['name'] == 'albums'){$field = ', i.content';}
+			$this->model->selectOnly('i.id, i.title, i.item_id' . $field);
 			$this->model->filterEqual('parent', $c['name'])->filterEqual('lang', $user_lang);
 			$is_translate = $this->model->get('multilang_contents');
 			if($is_translate){

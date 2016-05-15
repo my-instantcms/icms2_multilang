@@ -9,6 +9,12 @@ class actionMultilangAdd extends cmsAction {
 		$original = $model->getOriginalItem($type, $parent, $id);
 		if(!$original){cmsCore::error404();}
         $form = $this->getForm($type);
+		if($type == 'contents'){
+			$is_teaser = $model->db->isFieldExists('con_' . $parent, 'teaser');
+				$form->addField(0, new fieldText('teaser', array(
+				)));
+			}
+		}
         $is_submitted = $this->request->has('submit');
         if($is_submitted){
             $translate = $form->parse($this->request, $is_submitted);

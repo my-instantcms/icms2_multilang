@@ -16,3 +16,4 @@
 	define('LANG_MULTILANG_API_KEY_HINT', 'Получить ключ можете <a target="_blank" href="https://tech.yandex.ru/keys/get/?service=trnsl">здесь</a>');
 	define('LANG_MULTILANG_ERROR_API_KEY', 'Не найден ключ от API Яндекс-переводчика');
 	define('LANG_MULTILANG_NO_ITEM', 'Не найдет материал для перевода');
+	define('LANG_MULTILANG_FIELD_TEASER', 'Краткое описание');

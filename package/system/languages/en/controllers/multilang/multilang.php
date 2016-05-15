@@ -16,3 +16,4 @@
 	define('LANG_MULTILANG_API_KEY_HINT', 'Can get the key <a target="_blank" href="https://tech.yandex.ru/keys/get/?service=trnsl">here</a>');
 	define('LANG_MULTILANG_ERROR_API_KEY', 'I could not find the key to the API Yandex translator');
 	define('LANG_MULTILANG_NO_ITEM', 'Do not find the material to be translated');
+	define('LANG_MULTILANG_FIELD_TEASER', 'Short description');

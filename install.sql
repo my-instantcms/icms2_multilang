@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `{#}multilang_contents` (
   `parent` varchar(50) NOT NULL,
   `lang` varchar(6) NOT NULL,
   `title` varchar(100) NOT NULL,
+  `teaser` text,
   `content` text,
   PRIMARY KEY (`id`),
   KEY `item_id` (`item_id`,`parent`,`lang`),
