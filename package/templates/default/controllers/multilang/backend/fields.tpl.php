@@ -5,8 +5,8 @@
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addJS('templates/default/js/admin-content.js');
-    $this->setPageTitle(LANG_CP_SECTION_WIDGETS);
-    $this->addBreadcrumb(LANG_CP_SECTION_WIDGETS, $this->href_to('widgets'));
+    $this->setPageTitle(LANG_CP_CTYPE_FIELDS);
+    $this->addBreadcrumb(LANG_CP_CTYPE_FIELDS, $this->href_to('fields'));
 	$this->addToolButton(array(
 		'class' => 'help',
 		'title' => LANG_HELP,
@@ -37,8 +37,8 @@
         <td class="sidebar" valign="top">
             <div id="datatree">
                 <ul id="treeData" style="display: none">
-                    <?php foreach($widgets as $id=>$widget){ ?>
-                        <li id="<?php echo $widget['id'];?>" class="folder"><?php echo $widget['title']; ?></li>
+                    <?php foreach($ctypes as $id=>$ctype){ ?>
+                        <li id="<?php echo $ctype['id'];?>" class="folder"><?php echo $ctype['title']; ?></li>
                     <?php } ?>
                 </ul>
             </div>
@@ -50,7 +50,7 @@
                         $("#datatree").dynatree({
                             debugLevel: 0,
                             onPostInit: function(isReloading, isError){
-                                var path = $.cookie('icms[widget_tree_path]');
+                                var path = $.cookie('icms[field_tree_path]');
                                 if(!path){path = '1';}
                                 if (path) {
                                     $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
@@ -66,9 +66,9 @@
                             },
                             onActivate: function(node){
                                 node.expand();
-                                $.cookie('icms[widget_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
+                                $.cookie('icms[field_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
                                 var k = node.data.key;
-                                icms.datagrid.setURL("<?php echo $this->href_to('widgets_ajax'); ?>/" + k);
+                                icms.datagrid.setURL("<?php echo $this->href_to('fields_ajax'); ?>/" + k);
 								icms.datagrid.loadRows();
                             }
                         });

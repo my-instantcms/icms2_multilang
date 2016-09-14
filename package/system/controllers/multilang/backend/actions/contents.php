@@ -3,7 +3,7 @@
 class actionMultilangContents extends cmsAction {
 
     public function run($do=false){
-
+//return;
         if ($do){
             $this->runAction('contents_'.$do, array_slice($this->params, 1));
             return;
