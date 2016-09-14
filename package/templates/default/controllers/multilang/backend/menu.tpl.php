@@ -18,10 +18,11 @@
 	$langs = cmsCore::getLanguages();
 	$active = false;
 	$flags = false;	
-	$select_lang = 'en';
+	$auto_lang = $this->controller->model->getAutolang();
+	$select_lang = $auto_lang;
 	if(isset($_SESSION['language'])){$select_lang = $_SESSION['language'];}
 	if(isset($_SESSION['user']['language'])){$select_lang = $_SESSION['user']['language'];}
-	$select_lang = ($select_lang == $this->controller->cms_config->cfg_language) ? 'en' : $select_lang;
+	$select_lang = ($select_lang == $this->controller->cms_config->cfg_language) ? $auto_lang : $select_lang;
 	if($langs){
 		foreach($langs as $lang){
 			if($lang == $this->controller->cms_config->cfg_language){$active .= ' disable';}
@@ -90,7 +91,7 @@
 							if($(this).hasClass('disable')){return;}
 							$(".cp_toolbar ul li.ml_langs a").removeClass('active');
 							$(this).addClass('active');
-							var lang = $(this).attr('id') ? $(this).attr('id') : 'en';
+							var lang = $(this).attr('id') ? $(this).attr('id') : '<?php echo $auto_lang; ?>';
 							$.post('/multilang/sessionlang', {lang : lang}, function(result){
 								if(result.error){
 									alert('<?php html(LANG_MULTILANG_ERROR); ?>');
