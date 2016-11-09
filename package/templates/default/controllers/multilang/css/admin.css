@@ -1,4 +1,0 @@
-.cp_toolbar ul li.ml_langs{float:right;}
-.cp_toolbar ul li.ml_langs a{margin:0 2px;padding:1px 6px;cursor:pointer}
-.cp_toolbar ul li.ml_langs a:hover,.cp_toolbar ul li.ml_langs a.active{background:#ccc;}
-.cp_toolbar ul li.ml_langs a.disable{cursor: not-allowed;opacity: 0.5;background: transparent;}
