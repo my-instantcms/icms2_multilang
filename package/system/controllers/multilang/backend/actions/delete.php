@@ -8,7 +8,7 @@ class actionMultilangDelete extends cmsAction {
 		
 		$lang = $this->getLang();
 		
-		$translate = $this->model->filterEqual('lang', $lang)->getReadyItem('multilang_'.$type, $parent, $id);		
+		$translate = $this->model->filterEqual('lang', $lang)->getReadyItem($type, $parent, $id);		
 		if(!$translate){cmsCore::error404();}
 		
         $translate_id = $this->model->delete('multilang_'.$type, $translate['id']);
