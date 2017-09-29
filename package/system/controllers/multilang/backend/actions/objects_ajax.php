@@ -19,7 +19,7 @@ class actionMultilangObjectsAjax extends cmsAction {
         }
 		
 		$perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
-        $total = $this->model->getItemsCount($object, $item_id, $parent_id);        
+        $total = $this->model->getItemsCount($object, $item_id, $parent_id);
         $pages = ceil($total / $perpage);		
         $this->model->setPerPage($perpage);
 		

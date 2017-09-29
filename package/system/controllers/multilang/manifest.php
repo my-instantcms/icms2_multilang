@@ -12,4 +12,7 @@
 		'menu_before_list',
 		'widgets_before_list',
 		'engine_start',
+		'content_item_form',
+		'content_add',
+		'content_datasets',
 	));

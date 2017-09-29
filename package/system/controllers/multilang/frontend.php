@@ -6,11 +6,11 @@ class multilang extends cmsFrontend {
 	
 	public function actionSetlang($lang = false){
 		
-		if(!$lang){cmsCore::error404();}
+		if (!$lang){ cmsCore::error404(); }
 		
 		$langs = cmsCore::getLanguages();
 		$is_lang = in_array($lang, $langs);
-		if(!$is_lang){cmsCore::error404();}
+		if (!$is_lang){ cmsCore::error404(); }
 		
 		$segments = explode('/', mb_substr($_SERVER['HTTP_REFERER'], mb_strlen($this->cms_config->host.'/')));
 		
@@ -47,33 +47,7 @@ class multilang extends cmsFrontend {
 		if ( !$this->request->isAjax() || !$type || !$parent || !$id) {
 			$this->cms_template->renderJSON(array('error' => true, 'translate' => LANG_ERROR)); 
 		}
-		
-		switch($type){
-			
-			case 'contents':
-				$table_name = $this->model->table_prefix . $parent;
-				break;
-				
-			case 'cats':
-				$table_name = $this->model->table_prefix . $parent . '_cats';
-				break;
-				
-			case 'menu':
-				$table_name = 'menu_items';
-				break;
-				
-			case 'widgets':
-				$table_name = 'widgets_bind';
-				break;
-				
-			case 'ctypes':
-				$table_name = 'content_types';
-				break;
-			default:
-				$table_name = $type;
 
-		}
-		
 		$field = $this->request->get('field', '');
 		if (!$field) {
 			$this->cms_template->renderJSON(array('error' => true, 'translate' => LANG_ERROR)); 
@@ -86,7 +60,7 @@ class multilang extends cmsFrontend {
 			$field = strtok($field, '[');
 		}
 		
-		$item = $this->model->selectOnly('i.id, i.' . $field)->getItemById($table_name, $id);
+		$item = $this->model->selectOnly('i.id, i.' . $field)->getOriginalItem($type, $parent, $id);
 
 		if($item && isset($item[$field]) && $item[$field] && isset($this->options['key']) && $this->options['key']){
 			

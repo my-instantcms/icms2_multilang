@@ -3,7 +3,10 @@
 function grid_objects($self, $grid_field = false){
 
     $options = array(
-        'is_auto_init' => false
+        'is_auto_init' => false,
+		'is_sortable' => false,
+		'is_filter' => false,
+		'is_pagination' => false
     );
 
     $columns = array(

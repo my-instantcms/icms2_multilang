@@ -19,11 +19,22 @@ class modelMultilang extends cmsModel {
 				break;
 				
 			case 'menu':
+				$this->useCache("menu.menus");
 				return $this->selectOnly('i.id, i.title')->get('menu');
 				break;
 				
 			case 'widgets':
 				return $this->selectOnly('i.id, i.title')->get('widgets');
+				break;
+			
+			case 'fields':
+				$this->useCache('content.types');
+				return $this->selectOnly('i.id, i.name, i.title')->get('content_types');
+				break;
+				
+			case 'datasets':
+				$this->useCache('content.types');
+				return $this->selectOnly('i.id, i.title')->get('content_types');
 				break;
 				
 			default: return false;
@@ -37,28 +48,37 @@ class modelMultilang extends cmsModel {
 			case 'contents':
 				$category = $this->getCategory($item_id, $parent_id ? $parent_id : 1);
 				if(!$category){return false;}
-				$this->filterCategory($item_id, $category, true);
+				$this->useCache("content.list.{$item_id}")->filterCategory($item_id, $category, true);
 				return $this->getCount($this->table_prefix  . $item_id);
 				break;
 				
 			case 'cats':
 				$category = $this->getCategory($item_id, $parent_id ? $parent_id : 1);
 				if(!$category){return false;}
-				$this->filterCategory($item_id, $category, true);
+				$this->useCache('content.categories')->filterCategory($item_id, $category, true);
 				return $this->getCount($this->table_prefix  . $item_id . '_cats');
 				break;
 				
 			case 'menu':
-				$this->filterEqual('menu_id', $item_id)->filterEqual('parent_id', $parent_id);
+				$this->useCache('menu.items')->filterEqual('menu_id', $item_id)->filterEqual('parent_id', $parent_id);
 				return $this->getCount('menu_items');
 				break;
 				
 			case 'widgets':
-				return $this->filterEqual('widget_id', $item_id)->getCount('widgets_bind');
+				return $this->useCache('widgets.bind')->filterEqual('i.widget_id', $item_id)->getCount('widgets_bind');
 				break;
 				
 			case 'ctypes':
-				return $this->getCount('content_types');
+				return $this->useCache('content.types')->getCount('content_types');
+				break;
+				
+			case 'fields':
+				return $this->useCache('content.fields.' . $item_id)->getCount($this->table_prefix  . $item_id . '_fields');
+				break;
+				
+			case 'datasets':
+				return $this->useCache('content.datasets')->filterEqual('i.ctype_id', $item_id)->getCount('content_datasets');
+				break;
 				
 			default: return false;
 		}
@@ -76,17 +96,16 @@ class modelMultilang extends cmsModel {
 
 				}
 
-				$this->selectOnly('i.id, i.title, t.item_id as translated');
+				$this->useCache("content.list.{$item_id}")->selectOnly('i.id, i.title, t.item_id as translated');
 				$this->joinLeft('multilang_con_' . $item_id, 't', 't.item_id = i.id and t.lang = "'.$lang.'"');
-				return $this->get($this->table_prefix . $item_id, function($item, $model) use ($item_id){
+				return $this->orderBy('i.date_pub', 'DESC')->get($this->table_prefix . $item_id, function($item, $model) use ($item_id){
 					$item['parent'] = $item_id;
 					return $item;
 				});
 				break;
 			
 			case 'cats':
-				$this->selectOnly('i.id, i.title, t.item_id as translated')->filterGt('i.parent_id', 0);
-				$this->joinLeft('multilang_cats', 't', 't.item_id=i.id and t.parent="'.$item_id.'" and t.lang="'.$lang.'"');
+				$this->useCache('content.categories')->selectOnly('i.id, i.title, t.item_id as translated')->filterGt('i.parent_id', 0)->joinLeft('multilang_cats', 't', 't.item_id=i.id and t.parent="'.$item_id.'" and t.lang="'.$lang.'"');
 				return $this->get($this->table_prefix . $item_id . '_cats', function($item, $model) use ($item_id){
 					$item['parent'] = $item_id;
 					return $item;
@@ -94,7 +113,7 @@ class modelMultilang extends cmsModel {
 				break;
 				
 			case 'menu':
-				$this->selectOnly('i.id, i.title, t.item_id as translated');
+				$this->useCache('menu.items')->selectOnly('i.id, i.title, t.item_id as translated');
 				$this->joinLeft('multilang_menu', 't', 't.item_id=i.id and t.parent='.$item_id.' and t.lang="'.$lang.'"');
 				if($item_id !== false){$this->filterEqual('menu_id', $item_id);}
 				if ($parent_id !== false){$this->filterEqual('parent_id', $parent_id);}
@@ -105,18 +124,38 @@ class modelMultilang extends cmsModel {
 				break;
 				
 			case 'widgets':
-				$this->selectOnly('i.id, i.title, i.template, t.item_id as translated');
+				$this->useCache('widgets.bind')->selectOnly('i.id, i.title, i.template, t.item_id as translated');
 				$this->joinLeft('multilang_widgets', 't', 't.item_id=i.id and t.parent='.$item_id.' and t.lang="'.$lang.'"');
 				return $this->filterEqual('widget_id', $item_id)->get('widgets_bind', function($item, $model) use ($item_id){
 					$item['parent'] = $item_id;
 					return $item;
 				});
 				break;
+
 			case 'ctypes':	
-				$this->selectOnly('i.id, i.title, t.item_id as translated');
+				$this->useCache('content.types')->selectOnly('i.id, i.title, t.item_id as translated');
 				$this->joinLeft('multilang_ctypes', 't', 't.item_id = i.id and t.lang = "'.$lang.'"');
 				return $this->get('content_types', function($item, $model){
 					$item['parent'] = 0;
+					return $item;
+				});
+				break;
+				
+			case 'fields':	
+				$this->useCache('content.fields.' . $item_id)->selectOnly('i.id, i.title, i.name, t.item_id as translated');
+				$this->joinLeft('multilang_fields', 't', 't.item_id = i.name and t.parent="'.$item_id.'" and t.lang = "'.$lang.'"');
+				return $this->get($this->table_prefix  . $item_id . '_fields', function($item, $model) use ($item_id){
+					$item['parent'] = $item_id;
+					$item['id'] = $item['name'];
+					return $item;
+				});
+				break;
+				
+			case 'datasets':	
+				$this->useCache('content.datasets')->filterEqual('i.ctype_id', $item_id)->selectOnly('i.id, i.title, i.name, t.item_id as translated')->joinLeft('multilang_datasets', 't', 't.item_id = i.name and t.parent="'.$item_id.'" and t.lang = "'.$lang.'"');
+				return $this->get('content_datasets', function($item, $model) use ($item_id){
+					$item['parent'] = $item_id;
+					$item['id'] = $item['name'];
 					return $item;
 				});
 				break;
@@ -147,7 +186,7 @@ class modelMultilang extends cmsModel {
 			case 'menu':
 				$this->select('COUNT(childs.id)', 'childs_count')->joinLeft('menu_items', 'childs', 'childs.parent_id = i.id');
 				$this->filterEqual('menu_id', $table)->filterEqual('parent_id', $parent_id);
-				$this->groupBy('id')->orderBy('ordering', 'asc');
+				$this->useCache('menu.items')->groupBy('id')->orderBy('ordering', 'asc');
 				$menus = $this->get('menu_items');
 				if($menus){
 					foreach($menus as $menu){
@@ -171,44 +210,56 @@ class modelMultilang extends cmsModel {
 		switch($table_name){
 			
 			case 'contents':
-				$table_name = $this->table_prefix . $parent;
+				return $this->useCache("content.list.{$parent}")->getItemById($this->table_prefix . $parent, $id);
 				break;
 				
 			case 'cats':
-				$table_name = $this->table_prefix . $parent . '_cats';
+				return $this->useCache('content.categories')->getItemById($this->table_prefix . $parent . '_cats', $id);
 				break;
 				
 			case 'menu':
-				$table_name = 'menu_items';
+				return $this->useCache('menu.items')->getItemById('menu_items', $id);
 				break;
 				
 			case 'widgets':
-				$table_name = 'widgets_bind';
+				return $this->useCache('widgets.bind')->getItemById('widgets_bind', $id);
 				break;
 				
 			case 'ctypes':
-				$table_name = 'content_types';
+				return $this->useCache('content.types')->getItemById('content_types', $id);
+				break;
+				
+			case 'fields':
+				return $this->useCache('content.fields.' . $parent)->getItemByField($this->table_prefix . $parent . '_fields', 'name', $id);
+				break;
+				
+			case 'datasets':
+				return $this->useCache('content.datasets')->filterEqual('i.ctype_id', $parent)->getItemByField('content_datasets', 'name', $id);
 				break;
 				
 		}
 		
-        return $this->getItemById($table_name, $id);
+        return false;
 		
     }
 	
 	public function getReadyItem($type, $parent, $item_id){
-		
+
 		$table = $this->getTable($type, $parent);
-		
-		if ($parent && $type != 'contents') { $this->filterEqual('parent', $parent); }	
-		
+
+		if ($parent && $type != 'contents') { $this->filterEqual('parent', $parent); }
+
+		$this->useCache("multilang.{$table}");
+
         return $this->filterEqual('item_id', $item_id)->getItem($table);
-		
+
     }
 	
 	public function addTranslate($data, $type, $parent){
 		
 		$table = $this->getTable($type, $parent);
+		
+		cmsCache::getInstance()->clean("multilang.{$table}");
 
 		return $this->insert($table, $data);
 
@@ -218,12 +269,25 @@ class modelMultilang extends cmsModel {
 		
 		$table = $this->getTable($type, $parent);
 
+		cmsCache::getInstance()->clean("multilang.{$table}");
+
 		return $this->update($table, $id, $data);
+
+	}
+	
+	public function delTranslate($type, $parent, $id){
+
+		$table = $this->getTable($type, $parent);
+
+		cmsCache::getInstance()->clean("multilang.{$table}");
+
+		return $this->delete($table, $id);
 
 	}
 	
 	public function getTable($type, $parent){
 
+		$type = str_replace("multilang_", "", $type);
 		$table = ($type == 'contents') ? 'multilang_con_' . $parent : 'multilang_' . $type;
 
 		 return $table;
@@ -281,6 +345,8 @@ class modelMultilang extends cmsModel {
 		$this->db->dropTable('multilang_ctypes');
 		$this->db->dropTable('multilang_menu');
 		$this->db->dropTable('multilang_widgets');
+		$this->db->dropTable('multilang_fields');
+		$this->db->dropTable('multilang_datasets');
 		
 		$ctypes = $this->selectOnly('i.id, i.name')->get('content_types');
 		if($ctypes){

@@ -9,17 +9,17 @@ class actionMultilangAdd extends cmsAction {
 		$lang = $this->getLang();
 		
 		$original = $this->model->getOriginalItem($type, $parent, $id);
-		if(!$original){cmsCore::error404();}
+		if (!$original){cmsCore::error404();}
 		
         $form = $this->getForm($type, array($parent));
 
         $is_submitted = $this->request->has('submit');
-        if($is_submitted){
+        if ($is_submitted){
 			
             $translate = $form->parse($this->request, $is_submitted);
-			$translate['item_id'] = $original['id'];
+			$translate['item_id'] = $id;
 			
-			if($parent){$translate['parent'] = $parent;}			
+			if ($parent){ $translate['parent'] = $parent; }			
 			$translate['lang'] = $lang;
 			
             $errors = $form->validate($this, $translate);			
@@ -30,8 +30,8 @@ class actionMultilangAdd extends cmsAction {
                     cmsUser::addSessionMessage(LANG_MULTILANG_ADD, 'success');
                 }
 				
-				if($type == 'menu'){ $this->redirectToAction('objects', array('menu', 'lazy')); }
-				if($type == 'widgets'){ $this->redirectToAction('objects', array('widgets', '0', 'template')); }
+				if ($type == 'menu'){ $this->redirectToAction('objects', array('menu', 'lazy')); }
+				if ($type == 'widgets'){ $this->redirectToAction('objects', array('widgets', '0', 'template')); }
 				
                 $this->redirectToAction('objects', $type);
 				

@@ -53,6 +53,26 @@ class formMultilangCtypes extends cmsForm {
 
                 )
             ),
+			array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_LIST_LABELS,
+                'childs' => array(
+                    new fieldString('labels:list', array(
+                        'title' => LANG_CP_LIST_LABEL,
+                        'hint' => LANG_CP_LIST_LABELS_HINT,
+                        'rules' => array(
+                            array('max_length', 100)
+                        )
+                    )),
+                    new fieldString('labels:profile', array(
+                        'title' => LANG_CP_PROFILE_LABEL,
+                        'hint' => LANG_CP_LIST_LABELS_HINT,
+                        'rules' => array(
+                            array('max_length', 100)
+                        )
+                    )),
+                )
+            ),
 			'seo' => array(
 				'type' => 'fieldset',
 				'title' => LANG_CP_SEOMETA_DEFAULT,

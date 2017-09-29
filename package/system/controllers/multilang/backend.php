@@ -1,17 +1,17 @@
 <?php
 
 class backendMultilang extends cmsBackend {
-	
+
 	public $useDefaultOptionsAction = true;
 	protected $useOptions = true;
 	public $supports = array('caption', 'string', 'html', 'text');
-	
+
 	public function actionIndex(){		
 		$this->redirectToAction('objects', array('contents', 'lazy'));		
 	}
-	
+
 	public function getBackendMenu() {
-		
+
 		return array(
 			array(
 				'title' => LANG_CP_SECTION_CONTENT,
@@ -20,6 +20,14 @@ class backendMultilang extends cmsBackend {
 			array(
 				'title' => LANG_CP_SECTION_CTYPES,
 				'url' => href_to($this->root_url, 'objects', 'ctypes')
+			),
+			array(
+				'title' => LANG_CP_CTYPE_FIELDS,
+				'url' => href_to($this->root_url, 'objects', 'fields')
+			),
+			array(
+				'title' => LANG_CP_CTYPE_DATASETS,
+				'url' => href_to($this->root_url, 'objects', 'datasets')
 			),
 			array(
 				'title' => LANG_CATEGORY,
@@ -38,17 +46,13 @@ class backendMultilang extends cmsBackend {
                 'url' => href_to($this->root_url, 'options')
             ),
 		);
-		
+
 	}
-	
+
 	public function getLang(){
-		
-		$lang = cmsCore::getLanguageName();
-		
-		$lang = ($lang == $this->cms_config->language) ? 'en' : $lang;
-		
+		$lang = cmsCore::getLanguageName();		
+		$lang = ($lang == $this->cms_config->language) ? 'en' : $lang;		
 		return $lang;
 	}
-	
-}
 
+}

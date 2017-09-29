@@ -9,12 +9,15 @@ class onMultilangContentBeforeCategory extends cmsAction {
 		$user_lang = cmsCore::getLanguageName();
 		
 		if ($user_lang !== $this->cms_config->language) {
-			
-			$this->model->filterEqual('item_id', $ctype['id'])->filterEqual('lang', $user_lang);			
-			$translate = $this->model->getItem('multilang_ctypes', function($field, $model){
-				$field['labels'] = cmsModel::yamlToArray($field['labels']);
-				return $field;
-			});
+	
+			$translate = $this->model->
+				useCache("multilang.multilang_ctypes")->
+				filterEqual('item_id', $ctype['id'])->
+				filterEqual('lang', $user_lang)->
+				getItem('multilang_ctypes', function($field, $model){
+					$field['labels'] = cmsModel::yamlToArray($field['labels']);
+					return $field;
+				});
 			
 			if ($translate){
 				unset($translate['id']);

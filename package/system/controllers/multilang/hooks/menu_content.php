@@ -10,11 +10,14 @@ class onMultilangMenuContent extends cmsAction {
 			
 			if($user_lang !== $this->cms_config->language){
 
-				$this->model->selectOnly('i.id, i.labels, i.item_id');
-				$labels = $this->model->filterEqual('lang', $user_lang)->get('multilang_ctypes', function($item, $model){
-					$item['labels'] = cmsModel::yamlToArray($item['labels']);
-					return $item;
-				});
+				$labels = $this->model->
+					useCache("multilang.multilang_ctypes")->
+					selectOnly('i.id, i.labels, i.item_id')->
+					filterEqual('lang', $user_lang)->
+					get('multilang_ctypes', function($item, $model){
+						$item['labels'] = cmsModel::yamlToArray($item['labels']);
+						return $item;
+					});
 
 				if ($labels) {
 
@@ -48,9 +51,13 @@ class onMultilangMenuContent extends cmsAction {
 					} else {
 						$ctype_name = $segments[0];
 					}
-					
-					$this->model->selectOnly('i.id, i.title, i.item_id')->filterEqual('i.parent', $ctype_name);
-					$cats = $this->model->filterEqual('lang', $user_lang)->get('multilang_cats');
+
+					$cats = $this->model->
+						useCache("multilang.multilang_cats")->
+						selectOnly('i.id, i.title, i.item_id')->
+						filterEqual('i.parent', $ctype_name)->
+						filterEqual('lang', $user_lang)->
+						get('multilang_cats');
 
 					if($cats){
 

@@ -9,9 +9,12 @@ class onMultilangContentBeforeItem extends cmsAction {
 		$user_lang = cmsCore::getLanguageName();
 		
 		if ($user_lang !== $this->cms_config->language) {
-			
-			$this->model->filterEqual('item_id', $item['id'])->filterEqual('lang', $user_lang);
-			$is_translate = $this->model->getItem('multilang_con_' . $ctype['name']);
+
+			$is_translate = $this->model->
+				useCache("multilang.multilang_con_{$ctype['name']}")->
+				filterEqual('item_id', $item['id'])->
+				filterEqual('lang', $user_lang)->
+				getItem('multilang_con_' . $ctype['name']);
 			
 			if ($is_translate) {
 				unset($is_translate['id']);
@@ -22,13 +25,15 @@ class onMultilangContentBeforeItem extends cmsAction {
 				$fields['content']['html'] = $is_translate['content'];
 			}
 
-			$this->model->selectOnly('i.id, i.title, i.labels');
-			$this->model->filterEqual('item_id', $ctype['id'])->filterEqual('lang', $user_lang);
-
-			$t_ctype = $this->model->getItem('multilang_ctypes', function($field, $model){
-				$field['labels'] = cmsModel::yamlToArray($field['labels']);
-				return $field;
-			});
+			$t_ctype = $this->model->
+				useCache("multilang.multilang_ctypes")->
+				selectOnly('i.id, i.title, i.labels')->
+				filterEqual('item_id', $ctype['id'])->
+				filterEqual('lang', $user_lang)->
+				getItem('multilang_ctypes', function($field, $model){
+					$field['labels'] = cmsModel::yamlToArray($field['labels']);
+					return $field;
+				});
 
 			if ($t_ctype) {
 				unset($t_ctype['id']);

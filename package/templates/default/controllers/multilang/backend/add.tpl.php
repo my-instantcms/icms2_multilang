@@ -44,8 +44,8 @@
 							alert(result.translate);
 						} else {
 							$('form input[name="'+field+'"], form textarea[name="'+field+'"]').val(result.translate);
-							if ( $( 'form #f_'+field+' .redactor-editor' ).length ) {
-								$('form #f_'+field+' .redactor-editor').html(result.translate);
+							if ( $( 'form #f_'+field+' .redactor_editor' ).length ) {
+								$('form #f_'+field+' .redactor_editor').html(result.translate);
 							}
 							$('img', button).attr('src', '<?php html($flag); ?>');
 						}			
