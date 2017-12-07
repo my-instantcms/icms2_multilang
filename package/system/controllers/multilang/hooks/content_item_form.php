@@ -4,9 +4,9 @@ class onMultilangContentItemForm extends cmsAction {
 
     public function run($data){
 
-        list($form, $item) = $data;
+        list($form, $item, $ctype) = $data;
 
-        if(!$item){
+        if(!$item || empty($ctype['name'])){
 			$item['ctype_name'] = $this->cms_core->request->get('ctype_name', '');
 		}
 
@@ -34,7 +34,7 @@ class onMultilangContentItemForm extends cmsAction {
 			}
 		}
 
-        return array($form, $item);
+        return array($form, $item, $ctype);
 
     }
 
