@@ -349,9 +349,9 @@ class modelMultilang extends cmsModel {
 		$this->db->dropTable('multilang_datasets');
 		
 		$ctypes = $this->selectOnly('i.id, i.name')->get('content_types');
-		if($ctypes){
-			foreach($ctypes as $id => $ctype_name){	
-				$this->db->dropTable('multilang_con_' . $ctype_name);
+		if ($ctypes){
+			foreach($ctypes as $id => $ctype){
+				$this->db->dropTable('multilang_con_' . $ctype['name']);
 			}
 		}
 		
