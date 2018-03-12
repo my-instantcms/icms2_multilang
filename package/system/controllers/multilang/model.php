@@ -347,6 +347,7 @@ class modelMultilang extends cmsModel {
 		$this->db->dropTable('multilang_widgets');
 		$this->db->dropTable('multilang_fields');
 		$this->db->dropTable('multilang_datasets');
+		$this->db->dropTable('multilang_cats');
 		
 		$ctypes = $this->selectOnly('i.id, i.name')->get('content_types');
 		if ($ctypes){
