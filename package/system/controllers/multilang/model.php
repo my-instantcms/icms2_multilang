@@ -124,10 +124,11 @@ class modelMultilang extends cmsModel {
 				break;
 				
 			case 'widgets':
-				$this->useCache('widgets.bind')->selectOnly('i.id, i.title, i.template, t.item_id as translated');
-				$this->joinLeft('multilang_widgets', 't', 't.item_id=i.id and t.parent='.$item_id.' and t.lang="'.$lang.'"');
+				$this->useCache('widgets.bind')->selectOnly('i.id, i.title, t.item_id as translated, p.id as pid, p.template');
+				$this->joinLeft('multilang_widgets', 't', 't.item_id=i.id and t.lang="'.$lang.'"');
+				$this->joinLeft('widgets_bind_pages', 'p', 'p.bind_id=i.id');
 				return $this->filterEqual('widget_id', $item_id)->get('widgets_bind', function($item, $model) use ($item_id){
-					$item['parent'] = $item_id;
+					$item['parent'] = $item['pid'];
 					return $item;
 				});
 				break;
@@ -144,7 +145,7 @@ class modelMultilang extends cmsModel {
 			case 'fields':	
 				$this->useCache('content.fields.' . $item_id)->selectOnly('i.id, i.title, i.name, t.item_id as translated');
 				$this->joinLeft('multilang_fields', 't', 't.item_id = i.name and t.parent="'.$item_id.'" and t.lang = "'.$lang.'"');
-				return $this->get($this->table_prefix  . $item_id . '_fields', function($item, $model) use ($item_id){
+				return $this->orderBy('ordering')->get($this->table_prefix  . $item_id . '_fields', function($item, $model) use ($item_id){
 					$item['parent'] = $item_id;
 					$item['id'] = $item['name'];
 					return $item;
@@ -347,12 +348,11 @@ class modelMultilang extends cmsModel {
 		$this->db->dropTable('multilang_widgets');
 		$this->db->dropTable('multilang_fields');
 		$this->db->dropTable('multilang_datasets');
-		$this->db->dropTable('multilang_cats');
 		
 		$ctypes = $this->selectOnly('i.id, i.name')->get('content_types');
-		if ($ctypes){
-			foreach($ctypes as $id => $ctype){
-				$this->db->dropTable('multilang_con_' . $ctype['name']);
+		if($ctypes){
+			foreach($ctypes as $id => $ctype_name){	
+				$this->db->dropTable('multilang_con_' . $ctype_name);
 			}
 		}
 		

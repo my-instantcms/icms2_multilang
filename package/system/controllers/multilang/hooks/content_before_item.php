@@ -39,6 +39,22 @@ class onMultilangContentBeforeItem extends cmsAction {
 				unset($t_ctype['id']);
 				$ctype = array_merge($ctype, $t_ctype);
 			}
+			
+			$is_translate_fields = $this->model->
+				useCache("multilang.multilang_fields")->
+				filterEqual('i.lang', $user_lang)->
+				filterEqual('i.parent', $ctype['name'])->
+				get('multilang_fields', false, 'item_id');
+
+			if($is_translate_fields){
+
+				foreach($fields as $name => $field){
+					if (!empty($is_translate_fields[$name]['title'])){
+						$fields[$name]['title'] = $is_translate_fields[$name]['title'];
+					}
+				}
+
+			}
 
 		}
 

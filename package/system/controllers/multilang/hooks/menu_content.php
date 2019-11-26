@@ -63,10 +63,10 @@ class onMultilangMenuContent extends cmsAction {
 
 						foreach($cats as $cat){
 
-							for($i = 0;$i < count($item['items']); $i++){
+							foreach ($item['items'] as $index => $m_item){
 
-								if($item['items'][$i]['id'] == 'content.' . $ctype_name . '.' .$cat['item_id']){
-									$item['items'][$i]['title'] = $cat['title'];
+								if($item['items'][$index]['id'] == 'content.' . $ctype_name . '.' . $cat['item_id']){
+									$item['items'][$index]['title'] = $cat['title'];
 									continue;
 								}
 

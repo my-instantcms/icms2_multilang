@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS `{#}multilang_cats` (
   `lang` varchar(4) NOT NULL,
   `title` varchar(100) NOT NULL,
   `description` text,
+  `seo_keys` text,
+  `seo_desc` text,
+  `seo_title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `lang` (`lang`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
@@ -14,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `{#}multilang_ctypes` (
   `item_id` int(11) NOT NULL,
   `lang` varchar(4) NOT NULL,
   `title` varchar(100) NOT NULL,
+  `description` text,
   `labels` text,
   `seo_keys` text,
   `seo_desc` text,

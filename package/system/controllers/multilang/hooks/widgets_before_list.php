@@ -10,13 +10,13 @@ class onMultilangWidgetsBeforeList extends cmsAction {
 
 			$is_translate = $this->model->
 				useCache("multilang.multilang_widgets")->
-				selectOnly('i.id, i.item_id, i.title, i.links')->
+				selectOnly('i.id, i.parent, i.title, i.links')->
 				filterEqual('lang', $user_lang)->
 				get('multilang_widgets', function($item, $model){
-					$item['id'] = $item['item_id'];
-					unset($item['item_id']);
+					$item['id'] = $item['parent'];
+					unset($item['parent']);
 					return $item;
-				}, 'item_id');
+				}, 'parent');
 
 			if($is_translate){
 				foreach($is_translate as $t){

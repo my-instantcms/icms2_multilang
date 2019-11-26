@@ -15,4 +15,5 @@
 		'content_item_form',
 		'content_add',
 		'content_datasets',
+		'process_render_content_category_view',
 	));

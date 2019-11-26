@@ -43,9 +43,7 @@ class onMultilangContentBeforeList extends cmsAction {
 			}
 		}
 
-        $data = array($ctype, $item);
-
-        return $data;
+        return array($ctype, $item);
 
     }
 

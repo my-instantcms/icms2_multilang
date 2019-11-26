@@ -18,6 +18,10 @@ class formMultilangCtypes extends cmsForm {
                             array('min_length', 3)
                         )
                     )),
+
+                    new fieldHtml('description', array(
+                        'title' => LANG_DESCRIPTION
+                    )),
 					
 					new fieldString('labels:one', array(
                         'title' => LANG_CP_NUMERALS_1_LABEL,

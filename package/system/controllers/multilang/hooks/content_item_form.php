@@ -6,7 +6,7 @@ class onMultilangContentItemForm extends cmsAction {
 
         list($form, $item, $ctype) = $data;
 
-        if(!$item || empty($ctype['name'])){
+        if(!$item || empty($item['ctype_name'])){
 			$item['ctype_name'] = $this->cms_core->request->get('ctype_name', '');
 		}
 

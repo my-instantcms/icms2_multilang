@@ -20,6 +20,7 @@ class onMultilangMenuBeforeList extends cmsAction {
 
 			if ($is_translate) {
 				foreach($is_translate as $t){
+					if (empty($menu[$t['id']])){ continue; }
 					$menu[$t['id']] = array_merge($menu[$t['id']], $t);
 				}
 			}

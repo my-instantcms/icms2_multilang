@@ -17,7 +17,7 @@ class actionMultilangDelete extends cmsAction {
 		}
 		
 		if($type == 'menu'){ $this->redirectToAction('objects', array('menu', 'lazy')); }
-		if($type == 'widgets'){ $this->redirectToAction('objects', array('widgets', '0', 'template')); }
+		if($type == 'widgets'){ $this->redirectToAction('objects', array('widgets', '0')); }
 		
 		$this->redirectToAction('objects', $type);
 		
